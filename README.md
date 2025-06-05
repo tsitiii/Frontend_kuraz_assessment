@@ -1,6 +1,12 @@
 # TaskFlow - Task Management Application
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=flat-square)](https://your-deployed-url.com)
+
 A modern, user-friendly task management application built with React and CSS. TaskFlow helps you organize your tasks efficiently with features like priority levels, due dates, and task filtering.
+
+## Live Demo
+
+Check out the live application: [TaskFlow Demo](https://frontend-kuraz-assessment.vercel.app/)
 
 ## Features
 
