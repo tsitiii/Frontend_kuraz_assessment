@@ -13,6 +13,28 @@ A modern, user-friendly task management application built with React and CSS. Ta
 - Task statistics dashboard
 - Form validation for better user experience
 
+## Screenshots
+
+### Main Dashboard
+
+![Main Dashboard](docs/main-dashboard.jpg)
+_The main dashboard showing active tasks, task statistics, and filtering options_
+
+### Task Creation
+
+![Task Creation](docs/task-creation.jpg)
+_Modal for creating new tasks with priority and due date selection_
+
+### Task Management
+
+![Task Management](docs/task-management.jpg)
+_View of tasks with different priorities and completion statuses_
+
+### Mobile View
+
+![Mobile View](docs/mobile-view.jpg)
+_Responsive design on mobile devices_
+
 ## Getting Started
 
 ### Prerequisites
@@ -23,17 +45,20 @@ A modern, user-friendly task management application built with React and CSS. Ta
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/taskflow.git
 cd taskflow
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -43,6 +68,7 @@ npm run dev
 ## Usage
 
 ### Adding a Task
+
 1. Click the "+" button in the navigation bar
 2. Fill in the task details:
    - Title (required, 3-50 characters)
@@ -51,13 +77,16 @@ npm run dev
 3. Click "Add Task" to save
 
 ### Managing Tasks
+
 - Click the checkbox to mark a task as complete
 - Use the edit button (pencil icon) to modify a task
 - Use the delete button (trash icon) to remove a task
 - Use the filter tabs to view tasks by status or priority
 
 ### Task Statistics
+
 The dashboard shows:
+
 - Total number of tasks
 - Completed tasks
 - Pending tasks
@@ -78,15 +107,3 @@ taskflow/
 ├── package.json
 └── README.md
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
