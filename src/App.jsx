@@ -51,6 +51,9 @@ function App() {
   const [editingTask, setEditingTask] = useState(null)
   const [filter, setFilter] = useState('all')
   const [showAddTask, setShowAddTask] = useState(false)
+  const [error, setError] = useState('')
+  const [priority, setPriority] = useState('medium')
+  const [dueDate, setDueDate] = useState('')
 
   const currentDate = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -59,14 +62,35 @@ function App() {
     day: 'numeric'
   })
 
+  const validateTask = () => {
+    if (!newTask.trim()) {
+      setError('Task title cannot be empty')
+      return false
+    }
+    if (newTask.trim().length < 3) {
+      setError('Task title must be at least 3 characters long')
+      return false
+    }
+    if (newTask.trim().length > 100) {
+      setError('Task title must be less than 100 characters')
+      return false
+    }
+    if (!dueDate) {
+      setError('Please select a due date')
+      return false
+    }
+    setError('')
+    return true
+  }
+
   const addTask = (e) => {
     e.preventDefault()
-    if (!newTask.trim()) return
+    if (!validateTask()) return
 
     if (editingTask) {
       setTasks(tasks.map(task =>
         task.id === editingTask.id
-          ? { ...task, title: newTask }
+          ? { ...task, title: newTask, priority, date: dueDate }
           : task
       ))
       setEditingTask(null)
@@ -75,11 +99,13 @@ function App() {
         id: Date.now(),
         title: newTask,
         completed: false,
-        date: new Date().toISOString().split('T')[0],
-        priority: 'medium'
+        date: dueDate,
+        priority
       }])
     }
     setNewTask('')
+    setPriority('medium')
+    setDueDate('')
     setShowAddTask(false)
   }
 
@@ -98,17 +124,23 @@ function App() {
   const editTask = (task) => {
     setEditingTask(task)
     setNewTask(task.title)
+    setPriority(task.priority)
+    setDueDate(task.date)
     setShowAddTask(true)
   }
 
   const filteredTasks = tasks.filter(task => {
     if (filter === 'active') return !task.completed
     if (filter === 'completed') return task.completed
+    if (filter === 'high') return task.priority === 'high'
+    if (filter === 'medium') return task.priority === 'medium'
+    if (filter === 'low') return task.priority === 'low'
     return true
   })
 
   const completedCount = tasks.filter(task => task.completed).length
   const activeCount = tasks.length - completedCount
+  const highPriorityCount = tasks.filter(task => task.priority === 'high' && !task.completed).length
 
   return (
     <div>
@@ -125,7 +157,13 @@ function App() {
           <div className="navbar-actions">
             <span className="current-date">{currentDate}</span>
             <button
-              onClick={() => setShowAddTask(true)}
+              onClick={() => {
+                setShowAddTask(true)
+                setError('')
+                setNewTask('')
+                setPriority('medium')
+                setDueDate('')
+              }}
               className="add-task-btn"
               title="Add new task"
             >
@@ -152,6 +190,9 @@ function App() {
                       setShowAddTask(false)
                       setEditingTask(null)
                       setNewTask('')
+                      setError('')
+                      setPriority('medium')
+                      setDueDate('')
                     }}
                     className="modal-close"
                   >
@@ -161,14 +202,42 @@ function App() {
                   </button>
                 </div>
                 <form onSubmit={addTask} className="modal-form">
+                  {error && <div className="error-message">{error}</div>}
                   <input
                     type="text"
                     value={newTask}
-                    onChange={(e) => setNewTask(e.target.value)}
+                    onChange={(e) => {
+                      setNewTask(e.target.value)
+                      setError('')
+                    }}
                     placeholder="What needs to be done?"
-                    className="task-input"
+                    className={`task-input ${error ? 'error' : ''}`}
                     autoFocus
                   />
+                  <div className="form-group">
+                    <label htmlFor="priority">Priority</label>
+                    <select
+                      id="priority"
+                      value={priority}
+                      onChange={(e) => setPriority(e.target.value)}
+                      className="task-select"
+                    >
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="dueDate">Due Date</label>
+                    <input
+                      type="date"
+                      id="dueDate"
+                      value={dueDate}
+                      onChange={(e) => setDueDate(e.target.value)}
+                      className="task-input"
+                      min={new Date().toISOString().split('T')[0]}
+                    />
+                  </div>
                   <div className="modal-actions">
                     <button
                       type="button"
@@ -176,6 +245,9 @@ function App() {
                         setShowAddTask(false)
                         setEditingTask(null)
                         setNewTask('')
+                        setError('')
+                        setPriority('medium')
+                        setDueDate('')
                       }}
                       className="btn btn-secondary"
                     >
@@ -194,15 +266,37 @@ function App() {
           )}
 
           <div className="filter-tabs">
-            {['all', 'active', 'completed'].map((tab) => (
+            {[
+              { id: 'all', label: 'All Tasks' },
+              { id: 'active', label: 'Active' },
+              { id: 'completed', label: 'Completed' },
+              { id: 'high', label: 'High Priority' },
+              { id: 'medium', label: 'Medium Priority' },
+              { id: 'low', label: 'Low Priority' }
+            ].map((tab) => (
               <button
-                key={tab}
-                onClick={() => setFilter(tab)}
-                className={`filter-btn ${filter === tab ? 'active' : ''}`}
+                key={tab.id}
+                onClick={() => setFilter(tab.id)}
+                className={`filter-btn ${filter === tab.id ? 'active' : ''}`}
               >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab.label}
               </button>
             ))}
+          </div>
+
+          <div className="task-stats">
+            <div className="stat-item">
+              <span className="stat-value">{activeCount}</span>
+              <span className="stat-label">Active Tasks</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-value">{completedCount}</span>
+              <span className="stat-label">Completed</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-value">{highPriorityCount}</span>
+              <span className="stat-label">High Priority</span>
+            </div>
           </div>
 
           <div className="task-grid">
@@ -228,7 +322,9 @@ function App() {
                   ? "Click the + button to add a new task!"
                   : filter === 'active'
                     ? "No active tasks. Great job!"
-                    : "No completed tasks yet."}
+                    : filter === 'completed'
+                      ? "No completed tasks yet."
+                      : `No ${filter} priority tasks found.`}
               </p>
             </div>
           )}
