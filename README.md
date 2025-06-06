@@ -53,8 +53,8 @@ _Responsive design on mobile devices_
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/taskflow.git
-cd taskflow
+git clone https://github.com/tsitiii/Frontend_kuraz_assessment.git
+cd Frontend_kuraz_assessment
 ```
 
 2. Install dependencies:
@@ -101,7 +101,7 @@ The dashboard shows:
 ## Project Structure
 
 ```
-taskflow/
+Frontend_kuraz_assessment/
 ├── src/
 │   ├── components/
 │   │   └── Task.jsx
